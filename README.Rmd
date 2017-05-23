@@ -1,0 +1,60 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "fig/README-"
+)
+```
+
+# polypoly
+
+The goal of polypoly is to provide helper functions for polynomials created by
+`poly()`. 
+
+The name "polypoly" has no special significance It's just something catchy and
+related to `poly()`.
+
+## Installation
+
+You can install polypoly from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("tjmahr/polypoly")
+```
+
+## Example
+
+This package provides a tidying function `poly_melt()` and plotting function
+`poly_plot()`.
+
+
+```{r example, fig.width = 5, fig.height = 3}
+library(polypoly)
+xs <- 1:40
+poly_mat <- poly(xs, degree = 5)
+poly_melt(poly_mat)
+poly_plot(poly_mat)
+```
+
+We can also plot raw polynomials, but that display is less useful because the
+x-axis corresponds to the row number of polynomial matrix.
+
+```{r raw-example, fig.width = 5, fig.height = 3}
+poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
+poly_plot(poly_raw_mat)
+```
+
+
+
+## Resources
+
+If you searched for help on `poly()`, see also:
+
+* [What does the R function `poly()` really do?](https://stackoverflow.com/questions/19484053/what-does-the-r-function-poly-really-do)
