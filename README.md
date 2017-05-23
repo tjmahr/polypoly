@@ -61,3 +61,4 @@ Resources
 If you searched for help on `poly()`, see also:
 
 -   [What does the R function `poly()` really do?](https://stackoverflow.com/questions/19484053/what-does-the-r-function-poly-really-do)
+-   [Source code for the poly function](https://github.com/wch/r-source/blob/af7f52f70101960861e5d995d3a4bec010bc89e6/src/library/stats/R/contr.poly.R#L85)
