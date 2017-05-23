@@ -31,3 +31,27 @@ qr.R(qr(mm))
 qr.Q(qr(centered_mm))
 qr.R(qr(centered_mm))
 poly(1:10, degree = 3)
+
+
+
+
+
+
+# Is it safe to rescale the matrix?
+pm <- poly(1:30, degree = 3)
+zapsmall(cor(pm))
+polypoly::poly_plot(pm)
+
+# I want degree 1 to span a unit change in x
+span <- max(pm[, 1]) - min(pm[, 1])
+scale <- 1 / span
+unit_change <- pm * scale
+
+zapsmall(cor(unit_change))
+polypoly::poly_plot(unit_change)
+
+
+# I want degree 1 to span a 10 unit change in x
+scale <- 10 / span
+ten_change <- pm * scale
+polypoly::poly_plot(ten_change)
