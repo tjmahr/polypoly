@@ -14,11 +14,22 @@ knitr::opts_chunk$set(
 
 # polypoly
 
-The goal of polypoly is to provide helper functions for polynomials created by
-`poly()`. 
+The goal of polypoly is to provide helper functions for polynomials created by 
+`poly()`.
 
-The name "polypoly" has no special significance It's just something catchy and
-related to `poly()`.
+```{r logo, message = FALSE, echo = FALSE, fig.asp=.2, dpi=600, fig.width = 8}
+library(ggplot2)
+x <- poly(1:10000, degree = 6)
+df <- polypoly::poly_melt(x)
+df$dg <- as.numeric(df$degree)
+ggplot(df) + 
+  aes(x = observation, y = value, color = dg, group = dg) + 
+  geom_line(size = 1) + 
+  viridis::scale_color_viridis(option = "viridis") + 
+  theme_void() +
+  guides(color = "none") +
+  coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
+```
 
 ## Installation
 
@@ -29,11 +40,10 @@ You can install polypoly from github with:
 devtools::install_github("tjmahr/polypoly")
 ```
 
-## Example
+## Examples
 
 This package provides a tidying function `poly_melt()` and plotting function
 `poly_plot()`.
-
 
 ```{r example, fig.width = 5, fig.height = 3}
 library(polypoly)
@@ -44,13 +54,20 @@ poly_plot(poly_mat)
 ```
 
 We can also plot raw polynomials, but that display is less useful because the
-x-axis corresponds to the row number of polynomial matrix.
+_x_-axis corresponds to the row number of polynomial matrix.
 
 ```{r raw-example, fig.width = 5, fig.height = 3}
 poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
 poly_plot(poly_raw_mat)
 ```
 
+We can make the units clearer by using `by_observation = FALSE` so that the
+_x_-axis corresponds to the first column of the polynomial matrix.
+
+```{r raw-by-degree1,  fig.width = 5, fig.height = 3}
+poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
+poly_plot(poly_raw_mat, by_observation = FALSE)
+```
 
 
 ## Resources

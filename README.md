@@ -5,7 +5,7 @@ polypoly
 
 The goal of polypoly is to provide helper functions for polynomials created by `poly()`.
 
-The name "polypoly" has no special significance It's just something catchy and related to `poly()`.
+![](fig/README-logo-1.png)
 
 Installation
 ------------
@@ -17,8 +17,8 @@ You can install polypoly from github with:
 devtools::install_github("tjmahr/polypoly")
 ```
 
-Example
--------
+Examples
+--------
 
 This package provides a tidying function `poly_melt()` and plotting function `poly_plot()`.
 
@@ -46,7 +46,7 @@ poly_plot(poly_mat)
 
 ![](fig/README-example-1.png)
 
-We can also plot raw polynomials, but that display is less useful because the x-axis corresponds to the row number of polynomial matrix.
+We can also plot raw polynomials, but that display is less useful because the *x*-axis corresponds to the row number of polynomial matrix.
 
 ``` r
 poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
@@ -54,6 +54,15 @@ poly_plot(poly_raw_mat)
 ```
 
 ![](fig/README-raw-example-1.png)
+
+We can make the units clearer by using `by_observation = FALSE` so that the *x*-axis corresponds to the first column of the polynomial matrix.
+
+``` r
+poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
+poly_plot(poly_raw_mat, by_observation = FALSE)
+```
+
+![](fig/README-raw-by-degree1-1.png)
 
 Resources
 ---------
