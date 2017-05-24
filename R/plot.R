@@ -13,23 +13,6 @@ poly_melt <- function(x) {
 #' Plot a polynomial matrix
 #'
 #' @param x a matrix created by [stats::poly()]
-#' @return a [ggplot2::ggplot()] plot of the degree terms from the matrix
-#' @export
-poly_plot <- function(x) {
-  df <- poly_melt(x)
-  df$degree <- factor(df$degree, levels = colnames(x))
-
-  # Should I try to avoid loading ggplot2?
-  `%+p%` <- ggplot2::`%+%`
-  p <- ggplot2::ggplot(df) %+p%
-    ggplot2::aes_(x = ~ observation, y = ~ value, color = ~ degree) %+p%
-    ggplot2::geom_line()
-  p
-}
-
-#' Plot a polynomial matrix
-#'
-#' @param x a matrix created by [stats::poly()]
 #' @param by_observation whether the plot's x axis should be the observation/row
 #'   number (`TRUE`, the default), or whether it should be the degree-1 terms
 #'   (`FALSE`)
@@ -80,7 +63,7 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL, scale_width
   x <- sort(unique(x))
 
   # Create the polynomial basis
-  m <- poly(x, degree = degree, simple = TRUE)
+  m <- stats::poly(x, degree = degree, simple = TRUE)
   m <- poly_rescale(m, scale_width)
 
   # Name the columns

@@ -171,6 +171,19 @@ poly_add_columns(df, Days, degree = 3, prefix = "poly_", scale_width = 1)
 #> # ... with 170 more rows
 ```
 
+We can confirm that the added columns are orthogonal.
+
+``` r
+df2 <- poly_add_columns(df, Days, degree = 3, scale_width = 1)
+
+dfl <- tidyr::gather(df2, var, value, Days1, Days2, Days3)
+ggplot(dfl) + 
+  aes(x = Days, y = value, color = var) + 
+  geom_line()
+```
+
+![](fig/README-sleepstudy-1.png)
+
 Resources
 ---------
 

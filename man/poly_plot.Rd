@@ -2,11 +2,8 @@
 % Please edit documentation in R/plot.R
 \name{poly_plot}
 \alias{poly_plot}
-\alias{poly_plot}
 \title{Plot a polynomial matrix}
 \usage{
-poly_plot(x, by_observation = TRUE)
-
 poly_plot(x, by_observation = TRUE)
 }
 \arguments{
@@ -15,16 +12,10 @@ poly_plot(x, by_observation = TRUE)
 \item{by_observation}{whether the plot's x axis should be the observation/row
 number (\code{TRUE}, the default), or whether it should be the degree-1 terms
 (\code{FALSE})}
-
-\item{x}{a matrix created by \code{\link[stats:poly]{stats::poly()}}}
 }
 \value{
 a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} plot of the degree terms from the matrix
-
-a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} plot of the degree terms from the matrix
 }
 \description{
-Plot a polynomial matrix
-
 Plot a polynomial matrix
 }
