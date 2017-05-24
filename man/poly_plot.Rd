@@ -13,8 +13,8 @@ poly_plot(x, by_observation = TRUE)
 \item{x}{a matrix created by \code{\link[stats:poly]{stats::poly()}}}
 
 \item{by_observation}{whether the plot's x axis should be the observation/row
-number (TRUE, the default), or whether it should be the degree-1 terms
-(FALSE)}
+number (\code{TRUE}, the default), or whether it should be the degree-1 terms
+(\code{FALSE})}
 
 \item{x}{a matrix created by \code{\link[stats:poly]{stats::poly()}}}
 }

@@ -12,10 +12,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# polypoly
-
-The goal of polypoly is to provide helper functions for polynomials created by 
-`poly()`.
 
 ```{r logo, message = FALSE, echo = FALSE, fig.asp=.2, dpi=600, fig.width = 8}
 library(ggplot2)
@@ -31,6 +27,10 @@ ggplot(df) +
   coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
 ```
 
+# polypoly
+
+Helper functions for polynomials created by `poly()`.
+
 ## Installation
 
 You can install polypoly from github with:
@@ -42,14 +42,23 @@ devtools::install_github("tjmahr/polypoly")
 
 ## Examples
 
-This package provides a tidying function `poly_melt()` and plotting function
-`poly_plot()`.
+### Tidying
 
-```{r example, fig.width = 5, fig.height = 3}
+This package provides a tidying function `poly_melt()`.
+
+```{r}
 library(polypoly)
 xs <- 1:40
 poly_mat <- poly(xs, degree = 5)
 poly_melt(poly_mat)
+```
+
+
+### Plotting
+
+Plot a matrix with `poly_plot()`.
+
+```{r example, fig.width = 5, fig.height = 3}
 poly_plot(poly_mat)
 ```
 
@@ -68,6 +77,58 @@ _x_-axis corresponds to the first column of the polynomial matrix.
 poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
 poly_plot(poly_raw_mat, by_observation = FALSE)
 ```
+
+### Rescaling a matrix
+
+The ranges of the terms created by `poly()` are sensitive to repeated values.
+
+```{r}
+p1 <- poly(0:9, degree = 2)
+p2 <- poly(rep(0:9, 18), degree = 2)
+
+col_range <- function(matrix) {
+  apply(matrix, 2, function(xs) max(xs) - min(xs))  
+}
+
+col_range(p1)
+col_range(p2)
+```
+
+Thus, two models fit with `y ~ poly(x, 3)` will not have comparable coefficients
+when the number of rows changes, even if the unique values of `x` did not
+change!
+
+`poly_rescale()` adjusts the values in the polynomial matrix so that the linear
+component has a specified range. The other terms are scaled by the same factor. 
+
+```{r rescaled,  fig.width = 5, fig.height = 3}
+col_range(poly_rescale(p1, scale_width = 1))
+col_range(poly_rescale(p2, scale_width = 1))
+
+poly_plot(poly_rescale(p2, scale_width = 1), by_observation = FALSE)
+```
+
+### Adding columns to a dataframe
+
+`poly_add_columns()` adds orthogonal polynomial transformations of a predictor
+variable to a dataframe.
+
+Here's how we could add polynomials to the `sleepstudy` dataset.
+
+```{r}
+df <- tibble::as_tibble(lme4::sleepstudy)
+print(df)
+
+poly_add_columns(df, Days, degree = 3)
+```
+
+We can optionally customize the column names and rescale the polynomial terms.
+
+```{r}
+poly_add_columns(df, Days, degree = 3, prefix = "poly_", scale_width = 1)
+```
+
+
 
 
 ## Resources
