@@ -87,7 +87,7 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL, scale_width
 
   # Preserve order of original data-frame
   merged <- merge(.data2, df, by = .col_name)
-  merged <- merged[order(merged[["...rowid"]]), ]
+  merged <- merged[order(merged[["...rowid"]]), , drop = FALSE]
   merged[["...rowid"]] <- NULL
 
   cols_to_add <- as.list(merged)[names]

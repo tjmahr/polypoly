@@ -5,6 +5,8 @@
 polypoly
 ========
 
+[![Travis-CI Build Status](https://travis-ci.org/tjmahr/polypoly.svg?branch=master)](https://travis-ci.org/tjmahr/polypoly) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/polypoly)](https://cran.r-project.org/package=polypoly)
+
 Helper functions for polynomials created by `poly()`.
 
 Installation
@@ -16,6 +18,44 @@ You can install polypoly from github with:
 # install.packages("devtools")
 devtools::install_github("tjmahr/polypoly")
 ```
+
+Background
+----------
+
+`poly()` creates a matrix of (orthogonal) polynomials over a set of values. The code below shows some examples of these matrices.
+
+``` r
+# orthogonal polynomials
+m <- poly(1:6, degree = 3, simple = TRUE)
+m
+#>               1          2          3
+#> [1,] -0.5976143  0.5455447 -0.3726780
+#> [2,] -0.3585686 -0.1091089  0.5217492
+#> [3,] -0.1195229 -0.4364358  0.2981424
+#> [4,]  0.1195229 -0.4364358 -0.2981424
+#> [5,]  0.3585686 -0.1091089 -0.5217492
+#> [6,]  0.5976143  0.5455447  0.3726780
+
+# the terms are uncorrelated. that's why they are "orthogonal"
+zapsmall(cor(m))
+#>   1 2 3
+#> 1 1 0 0
+#> 2 0 1 0
+#> 3 0 0 1
+
+# raw polynomials
+m <- poly(1:6, degree = 3, simple = TRUE, raw = TRUE)
+m
+#>      1  2   3
+#> [1,] 1  1   1
+#> [2,] 2  4   8
+#> [3,] 3  9  27
+#> [4,] 4 16  64
+#> [5,] 5 25 125
+#> [6,] 6 36 216
+```
+
+This package provides some helpful functions for working with these matrices.
 
 Examples
 --------
@@ -183,6 +223,22 @@ ggplot(dfl) +
 ```
 
 ![](fig/README-sleepstudy-1.png)
+
+### Experimental
+
+This package also (accidentally) works on splines, so splines could be an avenue for future development.
+
+``` r
+poly_plot(splines::bs(1:100, 10, intercept = TRUE))
+```
+
+![](fig/README-splines-1.png)
+
+``` r
+poly_plot(splines::ns(1:100, 10, intercept = FALSE))
+```
+
+![](fig/README-splines-2.png)
 
 Resources
 ---------

@@ -1,6 +1,6 @@
 Package: polypoly
 Title: Helper functions for orthogonal polynomials
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person("TJ", "Mahr", email = "tristan.mahr@gmail.com", role = c("aut", "cre"))
 Description: This packages provides functions for reshaping and plotting matrices of orthogonal polynomials.
 Depends: R (>= 3.3.0)
