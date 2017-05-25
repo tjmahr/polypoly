@@ -113,6 +113,16 @@ poly_plot(poly_raw_mat, by_observation = FALSE)
 
 ![](fig/README-raw-by-degree1-1.png)
 
+`poly_plot()` returns a plain ggplot2 plot, so you can further customize the output. For example, we can use ggplot2 to compute the sum of the individual polynomials and re-theme the plot.
+
+``` r
+poly_plot(poly_mat) + 
+  stat_summary(aes(color = "sum"), fun.y = "sum", geom = "line", size = 1) + 
+  theme_minimal()
+```
+
+![](fig/README-sum-1.png)
+
 ### Rescaling a matrix
 
 The ranges of the terms created by `poly()` are sensitive to repeated values.
@@ -226,6 +236,8 @@ ggplot(dfl) +
 
 ### Experimental
 
+#### Splines
+
 This package also (accidentally) works on splines, so splines could be an avenue for future development.
 
 ``` r
@@ -239,6 +251,130 @@ poly_plot(splines::ns(1:100, 10, intercept = FALSE))
 ```
 
 ![](fig/README-splines-2.png)
+
+#### Visualizing growth curve contributions
+
+This section illustrates a use case that may or may not be included in the package someday: Visualizing the weighting of polynomial terms from a linear model. For now, here's how to do that task with this package.
+
+Suppose we want to model some change over time using a cubic polynomial. For example, the growth of trees.
+
+``` r
+library(lme4)
+#> Loading required package: Matrix
+df <- tibble::as_tibble(Orange)
+df$Tree <- as.character(df$Tree)
+df
+#> # A tibble: 35 x 3
+#>     Tree   age circumference
+#>  * <chr> <dbl>         <dbl>
+#>  1     1   118            30
+#>  2     1   484            58
+#>  3     1   664            87
+#>  4     1  1004           115
+#>  5     1  1231           120
+#>  6     1  1372           142
+#>  7     1  1582           145
+#>  8     2   118            33
+#>  9     2   484            69
+#> 10     2   664           111
+#> # ... with 25 more rows
+
+ggplot(df) + 
+  aes(x = age, y = circumference, color = Tree) + 
+  geom_line()
+```
+
+![](fig/README-trees1-1.png)
+
+We can bind the polynomial terms onto the data and fit a model.
+
+``` r
+df <- poly_add_columns(Orange, age, 3, scale_width = 1)
+
+model <- lmer(
+  scale(circumference) ~ age1 + age2 + age3 + (age1 + age2 + age3 | Tree), 
+  data = df)
+summary(model)
+#> Linear mixed model fit by REML ['lmerMod']
+#> Formula: 
+#> scale(circumference) ~ age1 + age2 + age3 + (age1 + age2 + age3 |  
+#>     Tree)
+#>    Data: df
+#> 
+#> REML criterion at convergence: -11.7
+#> 
+#> Scaled residuals: 
+#>      Min       1Q   Median       3Q      Max 
+#> -1.54080 -0.42555  0.08564  0.49192  1.37387 
+#> 
+#> Random effects:
+#>  Groups   Name        Variance Std.Dev. Corr             
+#>  Tree     (Intercept) 0.125868 0.35478                   
+#>           age1        0.384777 0.62030   0.99            
+#>           age2        0.009972 0.09986  -0.63 -0.49      
+#>           age3        0.010702 0.10345  -0.89 -0.95  0.19
+#>  Residual             0.016876 0.12991                   
+#> Number of obs: 35, groups:  Tree, 5
+#> 
+#> Fixed effects:
+#>               Estimate Std. Error t value
+#> (Intercept)  8.118e-16  1.602e-01   0.000
+#> age1         2.719e+00  2.852e-01   9.533
+#> age2        -1.520e-01  7.995e-02  -1.901
+#> age3        -2.529e-01  8.086e-02  -3.128
+#> 
+#> Correlation of Fixed Effects:
+#>      (Intr) age1   age2  
+#> age1  0.950              
+#> age2 -0.348 -0.266       
+#> age3 -0.502 -0.529  0.062
+```
+
+How do we understand the contribution of each of these terms? We can recreate the model matrix by attaching the intercept term to a polynomial matrix.
+
+``` r
+poly_mat <- poly_rescale(poly(df$age, degree = 3), 1)
+pred_mat <- cbind(constant = 1, poly_mat)
+head(pred_mat, 7)
+#>      constant           1          2          3
+#> [1,]        1 -0.54927791  0.5047675 -0.2964647
+#> [2,]        1 -0.29927791 -0.1637435  0.4264971
+#> [3,]        1 -0.17632709 -0.3312105  0.2957730
+#> [4,]        1  0.05591335 -0.3573516 -0.2139411
+#> [5,]        1  0.21096799 -0.1635520 -0.3699278
+#> [6,]        1  0.30727947  0.0419906 -0.2489830
+#> [7,]        1  0.45072209  0.4690995  0.4070466
+```
+
+Weight the predictors using the model fixed effects.
+
+``` r
+weighted <- pred_mat %*% diag(fixef(model))
+colnames(weighted) <- colnames(pred_mat)
+```
+
+And do some tidying to plot the two sets of predictors.
+
+``` r
+df_raw <- poly_melt(pred_mat)
+df_raw$predictors <- "raw"
+
+df_weighted <- poly_melt(weighted)
+df_weighted$predictors <- "weighted"
+
+df_both <- rbind(df_raw, df_weighted)
+
+# Only need the first 7 observations because that is one tree
+ggplot(df_both[df_both$observation <= 7, ]) + 
+  aes(x = observation, y = value, color = degree) + 
+  geom_line() + 
+  facet_grid(. ~ predictors) + 
+  labs(color = "term")
+```
+
+![](fig/README-trees-comparison-1.png)
+
+The linear trend drives the growth curve. The quadratic and cubic terms make tiny contributions. We can see that the intercept term does nothing (because we used `scale()` in the model). Hmmm... perhaps I need to find a better example dataset for the demo.
 
 Resources
 ---------

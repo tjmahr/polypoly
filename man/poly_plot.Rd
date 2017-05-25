@@ -4,7 +4,7 @@
 \alias{poly_plot}
 \title{Plot a polynomial matrix}
 \usage{
-poly_plot(x, by_observation = TRUE)
+poly_plot(x, by_observation = TRUE, x_col = 1)
 }
 \arguments{
 \item{x}{a matrix created by \code{\link[stats:poly]{stats::poly()}}}
@@ -12,6 +12,9 @@ poly_plot(x, by_observation = TRUE)
 \item{by_observation}{whether the x axis should be mapped to the
 observation/row number (\code{TRUE}, the default) or to the degree-1 terms of
 the matrix (\code{FALSE})}
+
+\item{x_col}{integer indicating which column to plot as the x-axis when
+\code{by_observation} is \code{FALSE}}
 }
 \value{
 a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} plot of the degree terms from the matrix

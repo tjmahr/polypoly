@@ -33,6 +33,8 @@ poly_melt <- function(x) {
 #' @param by_observation whether the x axis should be mapped to the
 #'   observation/row number (`TRUE`, the default) or to the degree-1 terms of
 #'   the matrix (`FALSE`)
+#' @param x_col integer indicating which column to plot as the x-axis when
+#'   `by_observation` is `FALSE`
 #' @return a [ggplot2::ggplot()] plot of the degree terms from the matrix
 #' @export
 #' @examples
@@ -46,14 +48,14 @@ poly_melt <- function(x) {
 #'
 #' # Instead set by_observation to FALSE to plot along the degree 1 values
 #' poly_plot(m2, by_observation = FALSE)
-poly_plot <- function(x, by_observation = TRUE) {
+poly_plot <- function(x, by_observation = TRUE, x_col = 1) {
   df <- poly_melt(x)
   df$degree <- factor(df$degree, levels = colnames(x))
   x_var <- "observation"
 
   if (!by_observation) {
-    df1 <- df[df$degree == colnames(x)[1], , drop = FALSE]
-    x_var <- paste0("degree ", colnames(x)[1])
+    df1 <- df[df$degree == colnames(x)[x_col], , drop = FALSE]
+    x_var <- paste0("degree ", colnames(x)[x_col])
     df1[x_var] <- df1$value
     df1$degree <- NULL
     df1$value <- NULL
