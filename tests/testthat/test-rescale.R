@@ -7,6 +7,11 @@ test_that("Rescaling changes the width of the first column", {
 
   result <- poly_rescale(m, 10)
   expect_equal(max(result[, 1]) - min(result[, 1]), 10)
+
+  # test repeated values too
+  m <- poly(rep(rnorm(10), 4), degree = 3)
+  result <- poly_rescale(m, 10)
+  expect_equal(max(result[, 1]) - min(result[, 1]), 10)
 })
 
 test_that("Rescaling tolerates NULLs", {
@@ -22,6 +27,11 @@ test_that("Rescaling tolerates NULLs", {
 test_that("Rescaling is mathematically sound", {
   # i.e., rescaled values are still orthogonal
   m <- poly(1:10, degree = 3)
-  result <- poly_rescale(m, scale_width = 10)
+  result <- poly_rescale(m, 10)
+  expect_equivalent(zapsmall(cor(result)), diag(3))
+
+  # test repeated values too
+  m <- poly(rep(rnorm(10), 4), degree = 3)
+  result <- poly_rescale(m, 10)
   expect_equivalent(zapsmall(cor(result)), diag(3))
 })
