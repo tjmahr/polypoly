@@ -6,4 +6,4 @@
 ^\.travis\.yml$
 ^inst/notes\.R$
 ^cran-comments\.md$
-^LICENSE$
+^LICENSE\.md$
