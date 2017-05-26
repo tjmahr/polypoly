@@ -1,7 +1,13 @@
 #' polypoly: Helper functions for orthogonal polynomials
 #'
+#' This package provides helpful functions for orthogonal polynomials created by
+#' [stats::poly()]. These include plotting [poly_plot()], tidying [poly_melt()],
+#' rescaling [poly_rescale()], and manipulating a dataframe
+#' [poly_add_columns()].
+#'
 #' @name polypoly
 #' @docType package
+#' @author Tristan Mahr
 NULL
 
 
@@ -27,6 +33,9 @@ poly_melt <- function(x) {
   tibble::as_tibble(df)
 }
 
+
+
+
 #' Plot a polynomial matrix
 #'
 #' @param x a matrix created by [stats::poly()]
@@ -34,8 +43,11 @@ poly_melt <- function(x) {
 #'   observation/row number (`TRUE`, the default) or to the degree-1 terms of
 #'   the matrix (`FALSE`)
 #' @param x_col integer indicating which column to plot as the x-axis when
-#'   `by_observation` is `FALSE`
-#' @return a [ggplot2::ggplot()] plot of the degree terms from the matrix
+#'   `by_observation` is `FALSE`. Default is 1 (assumes the first column is the
+#'   linear polynomial term).
+#' @return a [ggplot2::ggplot()] plot of the degree terms from the matrix. For
+#'   `poly_plot_data()`, the dataframe used to create the plot is returned
+#'   instead.
 #' @export
 #' @examples
 #' # Defaults to plotting using the row number as x-axis
@@ -48,7 +60,20 @@ poly_melt <- function(x) {
 #'
 #' # Instead set by_observation to FALSE to plot along the degree 1 values
 #' poly_plot(m2, by_observation = FALSE)
+#'
+#' # Get a dataframe instead of plot
+#' poly_plot_data(m2, by_observation = FALSE)
 poly_plot <- function(x, by_observation = TRUE, x_col = 1) {
+  poly_plot_backend(x, by_observation, x_col, just_data = FALSE)
+}
+
+#' @rdname poly_plot
+#' @export
+poly_plot_data <- function(x, by_observation = TRUE, x_col = 1) {
+  poly_plot_backend(x, by_observation, x_col, just_data = TRUE)
+}
+
+poly_plot_backend <- function(x, by_observation = TRUE, x_col = 1, just_data) {
   df <- poly_melt(x)
   df$degree <- factor(df$degree, levels = colnames(x))
   x_var <- "observation"
@@ -67,8 +92,15 @@ poly_plot <- function(x, by_observation = TRUE, x_col = 1) {
   p <- ggplot2::ggplot(df) %+p%
     ggplot2::aes_(x = as.name(x_var), y = ~ value, color = ~ degree) %+p%
     ggplot2::geom_line()
-  p
+
+  if (just_data) {
+    tibble::as_tibble(df)
+  } else {
+    p
+  }
 }
+
+
 
 
 #' Add orthogonal polynomial columns to a dataframe
@@ -132,6 +164,8 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL,
 }
 
 
+
+
 #' Rescale the range of a polynomial matrix
 #'
 #' @param x a matrix created by [stats::poly()]
@@ -169,6 +203,9 @@ poly_rescale <- function(x, scale_width = 1) {
 
   poly_strip_info(x)
 }
+
+
+
 
 # Strip some metadata from a polynomial matrix
 poly_strip_info <- function(x) {

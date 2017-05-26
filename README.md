@@ -22,7 +22,7 @@ devtools::install_github("tjmahr/polypoly")
 Background
 ----------
 
-`poly()` creates a matrix of (orthogonal) polynomials over a set of values. The code below shows some examples of these matrices.
+The `poly()` function in the `stats` package creates a matrix of (orthogonal) polynomials over a set of values. The code below shows some examples of these matrices.
 
 ``` r
 # orthogonal polynomials
@@ -36,7 +36,7 @@ m
 #> [5,]  0.3585686 -0.1091089 -0.5217492
 #> [6,]  0.5976143  0.5455447  0.3726780
 
-# the terms are uncorrelated. that's why they are "orthogonal"
+# the terms are uncorrelated. that's why they are "orthogonal".
 zapsmall(cor(m))
 #>   1 2 3
 #> 1 1 0 0
@@ -53,6 +53,13 @@ m
 #> [4,] 4 16  64
 #> [5,] 5 25 125
 #> [6,] 6 36 216
+
+# raw polynomials are highly correlated.
+round(cor(m), 2)
+#>      1    2    3
+#> 1 1.00 0.98 0.94
+#> 2 0.98 1.00 0.99
+#> 3 0.94 0.99 1.00
 ```
 
 This package provides some helpful functions for working with these matrices.
@@ -85,6 +92,8 @@ poly_melt(poly_mat)
 #> # ... with 190 more rows
 ```
 
+The returned dataframe has one row per cell of the original matrix. Essentialy, the columns of the matrix are stacked on top of each other to create a long dataframe. The `observation` and `degree` columns record each values' original row number and column name, respectively.
+
 ### Plotting
 
 Plot a matrix with `poly_plot()`.
@@ -107,15 +116,15 @@ poly_plot(poly_raw_mat)
 We can make the units clearer by using `by_observation = FALSE` so that the *x*-axis corresponds to the first column of the polynomial matrix.
 
 ``` r
-poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
 poly_plot(poly_raw_mat, by_observation = FALSE)
 ```
 
 ![](fig/README-raw-by-degree1-1.png)
 
-`poly_plot()` returns a plain ggplot2 plot, so you can further customize the output. For example, we can use ggplot2 to compute the sum of the individual polynomials and re-theme the plot.
+`poly_plot()` returns a plain ggplot2 plot, so we can further customize the output. For example, we can use ggplot2 to compute the sum of the individual polynomials and re-theme the plot.
 
 ``` r
+library(ggplot2)
 poly_plot(poly_mat) + 
   stat_summary(aes(color = "sum"), fun.y = "sum", geom = "line", size = 1) + 
   theme_minimal()
@@ -123,17 +132,38 @@ poly_plot(poly_mat) +
 
 ![](fig/README-sum-1.png)
 
+For total customization, `poly_plot_data()` will return the dataframe that *would* have been plotted by `poly_plot()`.
+
+``` r
+poly_plot_data(poly_mat, by_observation = FALSE)
+#> # A tibble: 200 x 4
+#>    observation degree       value `degree 1`
+#>          <int> <fctr>       <dbl>      <dbl>
+#>  1           1      1 -0.26709823 -0.2670982
+#>  2           1      2  0.32799146 -0.2670982
+#>  3           1      3 -0.35999228 -0.2670982
+#>  4           1      4  0.36922435 -0.2670982
+#>  5           1      5 -0.35999228 -0.2670982
+#>  6           2      5 -0.08307514 -0.2534009
+#>  7           2      1 -0.25340088 -0.2534009
+#>  8           2      2  0.27753123 -0.2534009
+#>  9           2      3 -0.24922542 -0.2534009
+#> 10           2      4  0.17987853 -0.2534009
+#> # ... with 190 more rows
+```
+
 ### Rescaling a matrix
 
 The ranges of the terms created by `poly()` are sensitive to repeated values.
 
 ``` r
-p1 <- poly(0:9, degree = 2)
-p2 <- poly(rep(0:9, 18), degree = 2)
-
+# For each column in a matrix, return difference between max and min values
 col_range <- function(matrix) {
   apply(matrix, 2, function(xs) max(xs) - min(xs))  
 }
+
+p1 <- poly(0:9, degree = 2)
+p2 <- poly(rep(0:9, 18), degree = 2)
 
 col_range(p1)
 #>         1         2 
@@ -224,21 +254,19 @@ poly_add_columns(df, Days, degree = 3, prefix = "poly_", scale_width = 1)
 We can confirm that the added columns are orthogonal.
 
 ``` r
-df2 <- poly_add_columns(df, Days, degree = 3, scale_width = 1)
-
-dfl <- tidyr::gather(df2, var, value, Days1, Days2, Days3)
-ggplot(dfl) + 
-  aes(x = Days, y = value, color = var) + 
-  geom_line()
+df <- poly_add_columns(df, Days, degree = 3, scale_width = 1)
+zapsmall(cor(df[c("Days1", "Days2", "Days3")]))
+#>       Days1 Days2 Days3
+#> Days1     1     0     0
+#> Days2     0     1     0
+#> Days3     0     0     1
 ```
-
-![](fig/README-sleepstudy-1.png)
 
 ### Experimental
 
 #### Splines
 
-This package also (accidentally) works on splines, so splines could be an avenue for future development.
+This package also (accidentally) works on splines. Splines are not officially supported, but they could be an avenue for future development.
 
 ``` r
 poly_plot(splines::bs(1:100, 10, intercept = TRUE))
@@ -252,7 +280,8 @@ poly_plot(splines::ns(1:100, 10, intercept = FALSE))
 
 ![](fig/README-splines-2.png)
 
-#### Visualizing growth curve contributions
+Longer example: Visualizing growth curve contributions
+------------------------------------------------------
 
 This section illustrates a use case that may or may not be included in the package someday: Visualizing the weighting of polynomial terms from a linear model. For now, here's how to do that task with this package.
 
@@ -334,8 +363,12 @@ How do we understand the contribution of each of these terms? We can recreate th
 
 ``` r
 poly_mat <- poly_rescale(poly(df$age, degree = 3), 1)
+
+# Keep only seven rows because there are 7 observations per tree
+poly_mat <- poly_mat[1:7, ]
+
 pred_mat <- cbind(constant = 1, poly_mat)
-head(pred_mat, 7)
+pred_mat
 #>      constant           1          2          3
 #> [1,]        1 -0.54927791  0.5047675 -0.2964647
 #> [2,]        1 -0.29927791 -0.1637435  0.4264971
@@ -374,7 +407,9 @@ ggplot(df_both[df_both$observation <= 7, ]) +
 
 ![](fig/README-trees-comparison-1.png)
 
-The linear trend drives the growth curve. The quadratic and cubic terms make tiny contributions. We can see that the intercept term does nothing (because we used `scale()` in the model). Hmmm... perhaps I need to find a better example dataset for the demo.
+The linear trend drives the growth curve. The quadratic and cubic terms make tiny contributions. We can see that the intercept term does nothing (because we used `scale()` in the model).
+
+Hmmm... perhaps we need to find a better example dataset for this example.
 
 Resources
 ---------

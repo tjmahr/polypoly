@@ -2,9 +2,12 @@
 % Please edit documentation in R/polypoly-package.R
 \name{poly_plot}
 \alias{poly_plot}
+\alias{poly_plot_data}
 \title{Plot a polynomial matrix}
 \usage{
 poly_plot(x, by_observation = TRUE, x_col = 1)
+
+poly_plot_data(x, by_observation = TRUE, x_col = 1)
 }
 \arguments{
 \item{x}{a matrix created by \code{\link[stats:poly]{stats::poly()}}}
@@ -14,10 +17,13 @@ observation/row number (\code{TRUE}, the default) or to the degree-1 terms of
 the matrix (\code{FALSE})}
 
 \item{x_col}{integer indicating which column to plot as the x-axis when
-\code{by_observation} is \code{FALSE}}
+\code{by_observation} is \code{FALSE}. Default is 1 (assumes the first column is the
+linear polynomial term).}
 }
 \value{
-a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} plot of the degree terms from the matrix
+a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} plot of the degree terms from the matrix. For
+\code{poly_plot_data()}, the dataframe used to create the plot is returned
+instead.
 }
 \description{
 Plot a polynomial matrix
@@ -33,4 +39,7 @@ poly_plot(m2)
 
 # Instead set by_observation to FALSE to plot along the degree 1 values
 poly_plot(m2, by_observation = FALSE)
+
+# Get a dataframe instead of plot
+poly_plot_data(m2, by_observation = FALSE)
 }

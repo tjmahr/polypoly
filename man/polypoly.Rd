@@ -6,5 +6,11 @@
 \alias{polypoly-package}
 \title{polypoly: Helper functions for orthogonal polynomials}
 \description{
-polypoly: Helper functions for orthogonal polynomials
+This package provides helpful functions for orthogonal polynomials created by
+\code{\link[stats:poly]{stats::poly()}}. These include plotting \code{\link[=poly_plot]{poly_plot()}}, tidying \code{\link[=poly_melt]{poly_melt()}},
+rescaling \code{\link[=poly_rescale]{poly_rescale()}}, and manipulating a dataframe
+\code{\link[=poly_add_columns]{poly_add_columns()}}.
+}
+\author{
+Tristan Mahr
 }

@@ -1,8 +1,8 @@
 Package: polypoly
 Title: Helper functions for orthogonal polynomials
 Version: 0.0.1.9000
-Authors@R: person("TJ", "Mahr", email = "tristan.mahr@gmail.com", role = c("aut", "cre"))
-Description: This packages provides functions for reshaping and plotting matrices of orthogonal polynomials.
+Authors@R: person("Tristan", "Mahr", email = "tristan.mahr@gmail.com", role = c("aut", "cre"))
+Description: This packages provides functions for reshaping, plotting, and manipulating matrices of orthogonal polynomials.
 Depends: R (>= 3.3.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
@@ -13,6 +13,12 @@ BugReports: https://github.com/tjmahr/polypoly/issues
 Imports: tibble,
     reshape2,
     ggplot2,
-    rlang
+    rlang,
+    stats
 RoxygenNote: 6.0.1
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown,
+    lme4,
+    splines
+VignetteBuilder: knitr

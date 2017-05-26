@@ -3,4 +3,5 @@
 export(poly_add_columns)
 export(poly_melt)
 export(poly_plot)
+export(poly_plot_data)
 export(poly_rescale)

@@ -1,5 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^README\.md$
 ^fig/README-.*\.png$
 ^\.travis\.yml$
+^inst/notes.R$
