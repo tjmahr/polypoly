@@ -1,10 +1,10 @@
 Package: polypoly
-Title: Helper functions for orthogonal polynomials
-Version: 0.0.1.9000
+Title: Helper Functions for Orthogonal Polynomials
+Version: 0.0.2
 Authors@R: person("Tristan", "Mahr", email = "tristan.mahr@gmail.com", role = c("aut", "cre"))
-Description: This packages provides functions for reshaping, plotting, and manipulating matrices of orthogonal polynomials.
+Description: Tools for reshaping, plotting, and manipulating matrices of orthogonal polynomials.
 Depends: R (>= 3.3.0)
-License: GPL-3 + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
