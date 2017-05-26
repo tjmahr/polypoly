@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README\.md$
-^fig/README-.*\.png$
+^fig/$
 ^\.travis\.yml$
-^inst/notes.R$
+^inst/notes\.R$
+^cran-comments\.md$
