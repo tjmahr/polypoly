@@ -1,7 +1,7 @@
 ## Test environments
 
-* ubuntu 12.04 (on travis-ci), R 3.4.0
-* win-builder (devel and release)
+* ubuntu 12.04 (on travis-ci): devel and release
+* windows: devel (win-builder) and release (local windows 7)
 
 ## R CMD check results
 
