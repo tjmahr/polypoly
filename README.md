@@ -12,7 +12,13 @@ Helper functions for polynomials created by `poly()`.
 Installation
 ------------
 
-You can install polypoly from github with:
+Install the latest release of polypoly from CRAN:
+
+``` r
+install.packages("polypoly")
+```
+
+Or install the developmental version from Github:
 
 ``` r
 # install.packages("devtools")

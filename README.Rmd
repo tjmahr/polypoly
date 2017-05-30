@@ -36,12 +36,19 @@ Helper functions for polynomials created by `poly()`.
 
 ## Installation
 
-You can install polypoly from github with:
+Install the latest release of polypoly from CRAN:
+
+```{r cran-installation, eval = FALSE}
+install.packages("polypoly")
+```
+
+Or install the developmental version from Github:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("tjmahr/polypoly")
 ```
+
 
 ```{r, child = "vignettes/overview.Rmd"}
 ```
