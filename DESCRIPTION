@@ -1,7 +1,14 @@
 Package: polypoly
 Title: Helper Functions for Orthogonal Polynomials
 Version: 0.0.2.9000
-Authors@R: person("Tristan", "Mahr", email = "tristan.mahr@gmail.com", role = c("aut", "cre"))
+Authors@R: 
+    person(
+      given = "Tristan",
+      family = "Mahr",
+      role = c("aut", "cre"),
+      email = "tristan.mahr@wisc.edu",
+      comment = c(ORCID = "0000-0002-8890-5116")
+    )
 Description: Tools for reshaping, plotting, and manipulating matrices of orthogonal polynomials.
 Depends: R (>= 3.3.3)
 License: GPL-3
