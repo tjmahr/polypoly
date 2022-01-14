@@ -3,7 +3,6 @@
 \docType{package}
 \name{polypoly}
 \alias{polypoly}
-\alias{polypoly-package}
 \title{polypoly: Helper functions for orthogonal polynomials}
 \description{
 This package provides helpful functions for orthogonal polynomials created by

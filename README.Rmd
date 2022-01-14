@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "fig/README-"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -29,8 +29,10 @@ ggplot(df) +
 
 # polypoly 
 
-[![Travis-CI Build Status](https://travis-ci.org/tjmahr/polypoly.svg?branch=master)](https://travis-ci.org/tjmahr/polypoly)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/tjmahr/polypoly/workflows/R-CMD-check/badge.svg)](https://github.com/tjmahr/polypoly/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/polypoly)](https://cran.r-project.org/package=polypoly)
+<!-- badges: end -->
 
 Helper functions for polynomials created by `poly()`.
 

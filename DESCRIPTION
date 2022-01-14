@@ -13,7 +13,6 @@ Description: Tools for reshaping, plotting, and manipulating matrices of orthogo
 Depends: R (>= 3.3.3)
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/tjmahr/polypoly
 BugReports: https://github.com/tjmahr/polypoly/issues
@@ -22,7 +21,7 @@ Imports: tibble,
     ggplot2,
     rlang,
     stats
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.2
 Suggests: testthat,
     knitr,
     rmarkdown,

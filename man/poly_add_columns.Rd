@@ -4,8 +4,7 @@
 \alias{poly_add_columns}
 \title{Add orthogonal polynomial columns to a dataframe}
 \usage{
-poly_add_columns(.data, .col, degree = 1, prefix = NULL,
-  scale_width = NULL)
+poly_add_columns(.data, .col, degree = 1, prefix = NULL, scale_width = NULL)
 }
 \arguments{
 \item{.data}{a dataframe}
