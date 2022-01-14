@@ -160,7 +160,7 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL,
   merged[["...rowid"]] <- NULL
 
   cols_to_add <- as.list(merged)[names]
-  tibble::add_column(.data, rlang::UQS(cols_to_add))
+  tibble::add_column(.data, !!!(cols_to_add))
 }
 
 
