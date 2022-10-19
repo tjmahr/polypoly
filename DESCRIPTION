@@ -21,7 +21,7 @@ Imports: tibble,
     ggplot2,
     rlang,
     stats
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Suggests: testthat,
     knitr,
     rmarkdown,

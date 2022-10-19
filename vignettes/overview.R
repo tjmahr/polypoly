@@ -1,7 +1,8 @@
 ## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   comment = "#>",
-  collapse = TRUE)
+  collapse = TRUE
+)
 
 ## -----------------------------------------------------------------------------
 # orthogonal polynomials
@@ -28,7 +29,7 @@ poly_melt(poly_mat)
 poly_plot(poly_mat)
 
 ## ----raw-example, fig.width = 5, fig.height = 3-------------------------------
-poly_raw_mat  <- poly(-10:10, degree = 3, raw = TRUE)
+poly_raw_mat <- poly(-10:10, degree = 3, raw = TRUE)
 poly_plot(poly_raw_mat)
 
 ## ----raw-by-degree1,  fig.width = 5, fig.height = 3---------------------------
@@ -37,7 +38,12 @@ poly_plot(poly_raw_mat, by_observation = FALSE)
 ## ----sum, fig.width = 5, fig.height = 3---------------------------------------
 library(ggplot2)
 poly_plot(poly_mat) + 
-  stat_summary(aes(color = "sum"), fun.y = "sum", geom = "line", size = 1) + 
+  stat_summary(
+    aes(color = "sum"), 
+    fun = "sum", 
+    geom = "line", 
+    size = 1
+  ) + 
   theme_minimal()
 
 ## -----------------------------------------------------------------------------
@@ -93,7 +99,8 @@ df <- poly_add_columns(Orange, age, 3, scale_width = 1)
 
 model <- lmer(
   scale(circumference) ~ age1 + age2 + age3 + (age1 + age2 + age3 | Tree), 
-  data = df)
+  data = df
+)
 summary(model)
 
 ## -----------------------------------------------------------------------------

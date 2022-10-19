@@ -87,3 +87,30 @@ test_that("Correlations are sound in dataframes", {
   cor_mat <- cor(result[, c("x1", "x2", "x3"), drop = FALSE])
   expect_equivalent(zapsmall(cor_mat), diag(3))
 })
+
+
+test_that("NAs can be handled.", {
+  xs <- c(NA_real_, NA_real_, rnorm(5))
+  df_rep <- data.frame(x = xs)
+
+  expect_error(
+    poly_add_columns(df_rep, x, degree = 3),
+    regexp = "NA values found"
+  )
+
+  expect_error(
+    poly_add_columns(df_rep, x, degree = 3, na_values = "error"),
+    regexp = "NA values found"
+  )
+
+  x <- expect_warning(
+    poly_add_columns(df_rep, x, degree = 3, na_values = "warn"),
+    regexp = "NA values found"
+  )
+  expect_true(is.na(x[["x1"]][2]))
+
+  y <- expect_silent(
+    poly_add_columns(df_rep, x, degree = 3, na_values = "allow")
+  )
+  expect_true(is.na(y[["x1"]][2]))
+})

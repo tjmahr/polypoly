@@ -244,19 +244,6 @@ print(df)
 #> # … with 170 more rows
 
 poly_add_columns(df, Days, degree = 3)
-#> Warning: Prefixing `UQS()` with the rlang namespace is deprecated as of rlang 0.3.0.
-#> Please use the non-prefixed form or `!!!` instead.
-#> 
-#>   # Bad:
-#>   rlang::expr(mean(rlang::UQS(args)))
-#> 
-#>   # Ok:
-#>   rlang::expr(mean(UQS(args)))
-#> 
-#>   # Good:
-#>   rlang::expr(mean(!!!args))
-#> 
-#> This warning is displayed once per session.
 #> # A tibble: 180 × 6
 #>    Reaction  Days Subject   Days1   Days2  Days3
 #>       <dbl> <dbl> <fct>     <dbl>   <dbl>  <dbl>

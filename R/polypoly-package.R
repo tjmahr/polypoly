@@ -111,6 +111,9 @@ poly_plot_backend <- function(x, by_observation = TRUE, x_col = 1, just_data) {
 #'   name of `.col`.
 #' @param scale_width optionally rescale the dataframe using [poly_rescale()].
 #'   Default behavior is not to perform any rescaling.
+#' @param na_values How to handle missing values. Default is `"error"` which
+#'   raises an error. Other options include `"warn"` to raise a warning and
+#'   `"allow"` to silently accept missing values.
 #' @return the dataframe with additional columns of orthogonal polynomial terms
 #'   of `.col`
 #' @export
@@ -122,20 +125,18 @@ poly_plot_backend <- function(x, by_observation = TRUE, x_col = 1, just_data) {
 #'
 #' # adds columns "t1", "t2", "t3 and rescale
 #' poly_add_columns(df, time, degree = 3, prefix = "t", scale_width = 1)
-poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL,
-                             scale_width = NULL) {
+poly_add_columns <- function(
+  .data,
+  .col,
+  degree = 1,
+  prefix = NULL,
+  scale_width = NULL,
+  na_values = c("error", "warn", "allow")
+) {
   # Support nonstandard evaluation
   .col <- rlang::enquo(.col)
-  .col_name <- rlang::quo_name(.col)
+  .col_name <- rlang::as_name(.col)
   stopifnot(.col_name %in% names(.data))
-
-  # Get the unique values
-  x <- rlang::eval_tidy(.col, .data)
-  x <- sort(unique(x))
-
-  # Create the polynomial basis
-  m <- stats::poly(x, degree = degree, simple = TRUE)
-  m <- poly_rescale(m, scale_width)
 
   # Name the new columns
   prefix <- ifelse(is.null(prefix), .col_name, prefix)
@@ -144,9 +145,45 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL,
   # Fail if name already exists
   if (any(names %in% colnames(.data))) {
     example_name <- colnames(.data)[which(colnames(.data) %in% names)][1]
-    stop("Column `", example_name, "` already exists. Try a different prefix.",
-         call. = FALSE)
+    message <- paste0(
+      "The column `",
+      example_name,
+      "` already exists. Try a different prefix."
+    )
+    rlang::abort(message)
   }
+
+  # Get the unique values
+  x <- rlang::eval_tidy(.col, .data)
+  has_na <- anyNA(x)
+  na_values <- match.arg(na_values)
+
+  if (has_na) {
+    if (na_values == "error") {
+      rlang::abort(
+        c(
+          sprintf("NA values found in `%s`.", .col_name),
+          "i" = "`stats::poly()` cannot handle missing values."
+        )
+      )
+    }
+    if (na_values == "warn") {
+      rlang::warn(
+        c(
+          sprintf("NA values found in `%s`.", .col_name),
+          "i" = "`stats::poly()` cannot handle missing values, so those values will be ignored.",
+          "i" = sprintf("Derived columns like `%s` will contain missing values.", names[1])
+        )
+      )
+    }
+  }
+
+  # Remove missing values
+  x <- sort(unique(x), na.last = NA)
+
+  # Create the polynomial basis
+  m <- stats::poly(x, degree = degree, simple = TRUE)
+  m <- poly_rescale(m, scale_width)
 
   # Merge orthogonal terms into data-set
   df <- as.data.frame(cbind(x, m))
@@ -155,7 +192,7 @@ poly_add_columns <- function(.data, .col, degree = 1, prefix = NULL,
   .data2["...rowid"] <- seq_len(nrow(.data2))
 
   # Preserve order of original data-frame
-  merged <- merge(.data2, df, by = .col_name)
+  merged <- merge(.data2, df, by = .col_name, all.x = TRUE)
   merged <- merged[order(merged[["...rowid"]]), , drop = FALSE]
   merged[["...rowid"]] <- NULL
 

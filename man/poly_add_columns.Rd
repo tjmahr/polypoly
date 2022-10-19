@@ -4,7 +4,14 @@
 \alias{poly_add_columns}
 \title{Add orthogonal polynomial columns to a dataframe}
 \usage{
-poly_add_columns(.data, .col, degree = 1, prefix = NULL, scale_width = NULL)
+poly_add_columns(
+  .data,
+  .col,
+  degree = 1,
+  prefix = NULL,
+  scale_width = NULL,
+  na_values = c("error", "warn", "allow")
+)
 }
 \arguments{
 \item{.data}{a dataframe}
@@ -18,6 +25,10 @@ name of \code{.col}.}
 
 \item{scale_width}{optionally rescale the dataframe using \code{\link[=poly_rescale]{poly_rescale()}}.
 Default behavior is not to perform any rescaling.}
+
+\item{na_values}{How to handle missing values. Default is \code{"error"} which
+raises an error. Other options include \code{"warn"} to raise a warning and
+\code{"allow"} to silently accept missing values.}
 }
 \value{
 the dataframe with additional columns of orthogonal polynomial terms
