@@ -30,8 +30,8 @@ ggplot(df) +
 # polypoly 
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/tjmahr/polypoly/workflows/R-CMD-check/badge.svg)](https://github.com/tjmahr/polypoly/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/polypoly)](https://cran.r-project.org/package=polypoly)
+[![R-CMD-check](https://github.com/tjmahr/polypoly/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tjmahr/polypoly/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Helper functions for polynomials created by `poly()`.

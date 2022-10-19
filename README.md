@@ -7,8 +7,8 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/tjmahr/polypoly/workflows/R-CMD-check/badge.svg)](https://github.com/tjmahr/polypoly/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/polypoly)](https://cran.r-project.org/package=polypoly)
+[![R-CMD-check](https://github.com/tjmahr/polypoly/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tjmahr/polypoly/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Helper functions for polynomials created by `poly()`.
@@ -86,7 +86,7 @@ library(polypoly)
 xs <- 1:40
 poly_mat <- poly(xs, degree = 5)
 poly_melt(poly_mat)
-#> # A tibble: 200 x 3
+#> # A tibble: 200 × 3
 #>    observation degree  value
 #>          <int> <chr>   <dbl>
 #>  1           1 1      -0.267
@@ -99,7 +99,7 @@ poly_melt(poly_mat)
 #>  8           8 1      -0.171
 #>  9           9 1      -0.158
 #> 10          10 1      -0.144
-#> # ... with 190 more rows
+#> # … with 190 more rows
 ```
 
 The returned dataframe has one row per cell of the original matrix.
@@ -159,7 +159,7 @@ that *would* have been plotted by `poly_plot()`.
 
 ``` r
 poly_plot_data(poly_mat, by_observation = FALSE)
-#> # A tibble: 200 x 4
+#> # A tibble: 200 × 4
 #>    observation degree   value `degree 1`
 #>          <int> <fct>    <dbl>      <dbl>
 #>  1           1 1      -0.267      -0.267
@@ -172,7 +172,7 @@ poly_plot_data(poly_mat, by_observation = FALSE)
 #>  8           2 2       0.278      -0.253
 #>  9           2 3      -0.249      -0.253
 #> 10           2 4       0.180      -0.253
-#> # ... with 190 more rows
+#> # … with 190 more rows
 ```
 
 ### Rescaling a matrix
@@ -228,7 +228,7 @@ Here’s how we could add polynomials to the `sleepstudy` dataset.
 ``` r
 df <- tibble::as_tibble(lme4::sleepstudy)
 print(df)
-#> # A tibble: 180 x 3
+#> # A tibble: 180 × 3
 #>    Reaction  Days Subject
 #>       <dbl> <dbl> <fct>  
 #>  1     250.     0 308    
@@ -241,10 +241,23 @@ print(df)
 #>  8     290.     7 308    
 #>  9     431.     8 308    
 #> 10     466.     9 308    
-#> # ... with 170 more rows
+#> # … with 170 more rows
 
 poly_add_columns(df, Days, degree = 3)
-#> # A tibble: 180 x 6
+#> Warning: Prefixing `UQS()` with the rlang namespace is deprecated as of rlang 0.3.0.
+#> Please use the non-prefixed form or `!!!` instead.
+#> 
+#>   # Bad:
+#>   rlang::expr(mean(rlang::UQS(args)))
+#> 
+#>   # Ok:
+#>   rlang::expr(mean(UQS(args)))
+#> 
+#>   # Good:
+#>   rlang::expr(mean(!!!args))
+#> 
+#> This warning is displayed once per session.
+#> # A tibble: 180 × 6
 #>    Reaction  Days Subject   Days1   Days2  Days3
 #>       <dbl> <dbl> <fct>     <dbl>   <dbl>  <dbl>
 #>  1     250.     0 308     -0.495   0.522  -0.453
@@ -257,7 +270,7 @@ poly_add_columns(df, Days, degree = 3)
 #>  8     290.     7 308      0.275  -0.0870 -0.378
 #>  9     431.     8 308      0.385   0.174  -0.151
 #> 10     466.     9 308      0.495   0.522   0.453
-#> # ... with 170 more rows
+#> # … with 170 more rows
 ```
 
 We can optionally customize the column names and rescale the polynomial
@@ -265,7 +278,7 @@ terms.
 
 ``` r
 poly_add_columns(df, Days, degree = 3, prefix = "poly_", scale_width = 1)
-#> # A tibble: 180 x 6
+#> # A tibble: 180 × 6
 #>    Reaction  Days Subject  poly_1  poly_2 poly_3
 #>       <dbl> <dbl> <fct>     <dbl>   <dbl>  <dbl>
 #>  1     250.     0 308     -0.5     0.527  -0.458
@@ -278,7 +291,7 @@ poly_add_columns(df, Days, degree = 3, prefix = "poly_", scale_width = 1)
 #>  8     290.     7 308      0.278  -0.0878 -0.381
 #>  9     431.     8 308      0.389   0.176  -0.153
 #> 10     466.     9 308      0.5     0.527   0.458
-#> # ... with 170 more rows
+#> # … with 170 more rows
 ```
 
 We can confirm that the added columns are orthogonal.
@@ -327,7 +340,7 @@ library(lme4)
 df <- tibble::as_tibble(Orange)
 df$Tree <- as.character(df$Tree)
 df
-#> # A tibble: 35 x 3
+#> # A tibble: 35 × 3
 #>    Tree    age circumference
 #>    <chr> <dbl>         <dbl>
 #>  1 1       118            30
@@ -340,7 +353,7 @@ df
 #>  8 2       118            33
 #>  9 2       484            69
 #> 10 2       664           111
-#> # ... with 25 more rows
+#> # … with 25 more rows
 
 ggplot(df) + 
   aes(x = age, y = circumference, color = Tree) + 
@@ -358,7 +371,7 @@ model <- lmer(
   scale(circumference) ~ age1 + age2 + age3 + (age1 + age2 + age3 | Tree), 
   data = df
 )
-#> boundary (singular) fit: see ?isSingular
+#> boundary (singular) fit: see help('isSingular')
 summary(model)
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: scale(circumference) ~ age1 + age2 + age3 + (age1 + age2 + age3 |  
@@ -393,7 +406,7 @@ summary(model)
 #> age2 -0.348 -0.266       
 #> age3 -0.502 -0.529  0.062
 #> optimizer (nloptwrap) convergence code: 0 (OK)
-#> boundary (singular) fit: see ?isSingular
+#> boundary (singular) fit: see help('isSingular')
 ```
 
 How do we understand the contribution of each of these terms? We can
